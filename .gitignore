@@ -1,0 +1,6 @@
+log*/
+tmp*/
+*.wav
+*.m4a
+__pycache__/
+*.mp4
