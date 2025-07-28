@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# This script runs all the necessary Python scripts in parallel
+python audio_input.py & python english_speech_to_text.py & python english_to_swahili_translation.py & python swahili_text_to_speech.py
