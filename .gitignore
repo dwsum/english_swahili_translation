@@ -5,3 +5,4 @@ tmp*/
 __pycache__/
 *.mp4
 test_data/
+env/
