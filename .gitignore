@@ -4,3 +4,4 @@ tmp*/
 *.m4a
 __pycache__/
 *.mp4
+test_data/

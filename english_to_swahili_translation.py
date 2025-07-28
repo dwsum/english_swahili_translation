@@ -9,6 +9,8 @@ import queue
 import sentencepiece as spm
 from ctranslate2 import Translator
 
+from constants import *
+
 class english_to_swahili_translation:
     def __init__(self):
         path_to_model = "/Users/drewsumsion/Downloads/model_files"
@@ -36,51 +38,39 @@ class english_to_swahili_translation:
 
         return translation[0]
 
-
-    
-    # def __init__(self):
-    #     model_checkpoint = "Rogendo/en-sw"
-    #     self.fine_tuned_model = pipeline("translation", model=model_checkpoint)
-
-    # def translate_english_to_swahili(self, text):
-    #     # translated_text = self.eng_swa_translator(text, max_length=128, num_beams=5)[0]['generated_text']
-    #     # return translated_text
-    #     return self.fine_tuned_model(text)[0]['translation_text']
-
     def translate_english_to_swahili_from_file(self):
-        save_path = "tmp/"
-        log_path = "log/"
-        Path(save_path).mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
-        Path(log_path).mkdir(parents=True, exist_ok=True)  # Ensure the
+
+        Path(TMP_DIR).mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
+        Path(LOG_DIR).mkdir(parents=True, exist_ok=True)  # Ensure the
+        Path(RUNNING_DIR).mkdir(parents=True, exist_ok=True)
         while True:
+            if not Path(RUNNING_DIR).exists():
+                break
             try:
-                all_files = list(glob.glob(f"{save_path}transcription_*.txt"))
+                all_files = list(glob.glob(f"{TMP_DIR}transcription_*.txt"))
                 if len(all_files) > 0:
-                    # print(f"Found {len(all_files)} text files in {save_path}.")
                     all_files = sorted(all_files, key=os.path.getmtime)  # Sort by modification time
-                    # print(f"Processing {len(all_files)} text files...")
                     if len(all_files) == 1:
                         time.sleep(1)  # wait to make sure it is not still being written to
                     # Process each text file
                     for file_path in all_files:
-                        # print(f"Processing file: {file_path}")
+                        if not Path(RUNNING_DIR).exists():
+                            break
                         with open(file_path, "r") as f:
                             text = f.read().strip()
 
                         translated_text = self.translate_english_to_swahili(text)
-                        # print(f"Translated Text: {translated_text}")
+                        
                         save_translated_path = file_path.replace(".txt", "_translated.txt").replace("transcription_", "translated_")
                         # Save the translated text to a new file
                         with open(save_translated_path, "w") as f:
                             f.write(translated_text)
-                        save_log_path = save_translated_path.replace(save_path, log_path)
+                        save_log_path = save_translated_path.replace(TMP_DIR, LOG_DIR)
                         with open(save_log_path, "w") as f:
                             f.write(translated_text)
-                        # print(f"Translated text saved to: {save_translated_path}")
-                        # Optionally, remove the processed file
+                        # Remove the original file
                         os.remove(file_path)
                 else:
-                    # print(f"No text files found in {save_path}.")
                     time.sleep(1)
             except KeyboardInterrupt:
                 # This block runs when the user presses Ctrl+C
