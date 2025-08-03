@@ -30,6 +30,14 @@ class swahili_text_to_speech:
 
         print("max:", np.max(output_np))
         print("min:", np.min(output_np))
+
+        # set max to max_value
+        max_value = 0.75
+        current_max = np.max(np.abs(output_np))
+        if current_max < max_value:
+            output_np = output_np * (max_value / current_max)
+        
+
         
         sd.play(output_np, self.model.config.sampling_rate, device='MacBook Air Speakers')
         sd.wait()
