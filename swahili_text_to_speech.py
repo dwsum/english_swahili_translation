@@ -27,9 +27,12 @@ class swahili_text_to_speech:
         
         # Convert PyTorch tensor to NumPy array
         output_np = output.squeeze().cpu().numpy()
+
+        print("max:", np.max(output_np))
+        print("min:", np.min(output_np))
         
-        sd.play(output_np, self.model.config.sampling_rate)
-        sd.wait()  # Wait until the sound has finished playing
+        sd.play(output_np, self.model.config.sampling_rate, device='MacBook Air Speakers')
+        sd.wait()
     
     def generate_speech_from_file(self):
         Path(RUNNING_DIR).mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
