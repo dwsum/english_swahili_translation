@@ -28,18 +28,17 @@ class swahili_text_to_speech:
         # Convert PyTorch tensor to NumPy array
         output_np = output.squeeze().cpu().numpy()
 
-        print("max:", np.max(output_np))
-        print("min:", np.min(output_np))
-
         # set max to max_value
-        max_value = 0.75
+        max_value = 0.6 #TODO control from input flag.
         current_max = np.max(np.abs(output_np))
         if current_max < max_value:
             output_np = output_np * (max_value / current_max)
         
 
         
-        sd.play(output_np, self.model.config.sampling_rate, device='MacBook Air Speakers')
+        # sd.play(output_np, self.model.config.sampling_rate, device='MacBook Air Speakers')
+        # sd.play(output_np, self.model.config.sampling_rate, device='Drew’s AirPods')
+        sd.play(output_np, self.model.config.sampling_rate * 1.2, device='External Headphones')
         sd.wait()
     
     def generate_speech_from_file(self):
