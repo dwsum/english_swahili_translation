@@ -43,7 +43,7 @@ class english_speech_to_text:
         timestamp = timestamp.strftime("%Y-%m-%d_%H-%M-%S")
         filename = f"{TMP_DIR}/transcription_{timestamp}_transcription.txt"
 
-        self.write_transcription(STARTUP_MESSAGE, filename)
+        # self.write_transcription(STARTUP_MESSAGE, filename)
 
         while True:
             try:

@@ -17,7 +17,7 @@ class swahili_text_to_speech:
         self.model = VitsModel.from_pretrained(model_name).to(device)
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-    def generate_speech(self, text):
+    def generate_speech(self, text, file_path):
         # Tokenize the input text
         inputs = self.tokenizer(text, return_tensors="pt")
         
@@ -33,12 +33,21 @@ class swahili_text_to_speech:
         current_max = np.max(np.abs(output_np))
         if current_max < max_value:
             output_np = output_np * (max_value / current_max)
-        
+
+        # find the length of the output_np
+        length_in_seconds = len(output_np) / self.model.config.sampling_rate
+
+        if length_in_seconds > 10:
+            # sampling_rate = self.model.config.sampling_rate * 13 / length_in_seconds
+            sampling_rate = self.model.config.sampling_rate * length_in_seconds / 10
+        else:
+            sampling_rate = self.model.config.sampling_rate
 
         
         # sd.play(output_np, self.model.config.sampling_rate, device='MacBook Air Speakers')
         # sd.play(output_np, self.model.config.sampling_rate, device='Drew’s AirPods')
-        sd.play(output_np, self.model.config.sampling_rate * 1.2, device='External Headphones')
+        # sd.play(output_np, self.model.config.sampling_rate * 1.2, device='External Headphones')
+        sd.play(output_np, sampling_rate, device='External Headphones')
         sd.wait()
     
     def generate_speech_from_file(self):
@@ -59,7 +68,7 @@ class swahili_text_to_speech:
                             break
                         with open(file_path, "r") as f:
                             text = f.read().strip()
-                        self.generate_speech(text)
+                        self.generate_speech(text, file_path)
                         # Optionally, remove the processed file
                         os.remove(file_path)
                 else:
